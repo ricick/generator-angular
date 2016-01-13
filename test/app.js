@@ -79,6 +79,23 @@ describe('angular:app', function () {
       ]));
     });
   });
+  
+  describe('--jade', function () {
+    beforeEach(function (done) {
+      this.angular.withOptions({
+        jade: true
+      }).on('end', done);
+    });
+
+    it('generates Jade files', function () {
+      assert.file([].concat(getDefaultFilesForAppPath('app'), [
+        'app/404.jade',
+        'app/index.jade',
+        'app/views/main.jade',
+        'app/views/view.jade'
+      ]));
+    });
+  });
 
   describe('--typescript', function () {
     beforeEach(function (done) {

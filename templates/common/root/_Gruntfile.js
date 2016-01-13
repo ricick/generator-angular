@@ -74,13 +74,18 @@ module.exports = function (grunt) {
       },<% } %>
       gruntfile: {
         files: ['Gruntfile.js']
-      },
+      },<% if (jade) { %>
+      jade: {
+        files: ['<%= yeoman.app %>/{,*/}*.jade'],
+        tasks: ['jade']
+      },<% } %>
       livereload: {
         options: {
           livereload: '<%%= connect.options.livereload %>'
         },
-        files: [
-          '<%%= yeoman.app %>/{,*/}*.html',
+        files: [<% if (jade) { %>
+          '.tmp/*.html',<% } else { %>
+          '<%%= yeoman.app %>/{,*/}*.html',<% } %>
           '.tmp/styles/{,*/}*.css',<% if (coffee || typescript) { %>
           '.tmp/scripts/{,*/}*.js',<% } %>
           '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
@@ -316,7 +321,22 @@ module.exports = function (grunt) {
           ext: '.js'
         }]
       }
-    },<% } %><% if (compass) { %>
+    },<% } %><% if (jade) { %>
+    // jade
+    jade: {
+      dist: {
+        options: {
+          pretty: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '.tmp',
+          src: '*.jade',
+          ext: '.html'
+        }]
+      }
+    }<% } %><% if (compass) { %>
 
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {

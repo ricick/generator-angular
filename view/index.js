@@ -24,12 +24,19 @@ var Generator = module.exports = function Generator() {
 util.inherits(Generator, yeoman.generators.NamedBase);
 
 Generator.prototype.createViewFiles = function createViewFiles() {
+  if (this.env.options.jade) {
+    var src = '../jade/views/view.jade';
+    var dest = this.name.toLowerCase() + '.jade';
+  }else{
+    var src = '../html/views/view.html';
+    var dest = this.name.toLowerCase() + '.html';
+  }
   this.template(
-    'app/views/view.html',
+    src,
     path.join(
       this.env.options.appPath,
       'views',
-      this.name.toLowerCase() + '.html'
+      dest
     )
   );
 };

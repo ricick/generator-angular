@@ -70,6 +70,21 @@ var Generator = module.exports = function Generator(args, options) {
 
     this.env.options.typescript = this.options.typescript;
   }
+  
+  if (typeof this.env.options.jade === 'undefined') {
+    this.option('jade', {
+      desc: 'Generate Jade instead of HTML'
+    });
+    // attempt to detect if user is using Jade or not
+    // if cml arg provided, use that; else look for the existence of Jade
+    if (!this.options.jade &&
+      this.expandFiles(path.join(this.appPath, '/scripts/**/*.jade'), {}).length > 0) {
+      this.options.jade = true;
+    }
+    console.log("jade", this.options.jade);
+
+    this.env.options.jade = this.options.jade;
+  }
 
   this.hookFor('angular:common', {
     args: args
@@ -319,7 +334,12 @@ Generator.prototype.askForModules = function askForModules() {
 
 Generator.prototype.readIndex = function readIndex() {
   this.ngRoute = this.env.options.ngRoute;
-  this.indexFile = this.engine(this.read('app/index.html'), this);
+  this.jade = this.env.options.jade;
+  if(this.jade){
+    this.indexFile = this.engine(this.read('../jade/index.jade'), this);
+  }else{
+    this.indexFile = this.engine(this.read('../html/index.html'), this);
+  }
 };
 
 Generator.prototype.bootstrapFiles = function bootstrapFiles() {
@@ -342,8 +362,13 @@ Generator.prototype.appJs = function appJs() {
 };
 
 Generator.prototype.createIndexHtml = function createIndexHtml() {
+  this.jade = this.env.options.jade;
   this.indexFile = this.indexFile.replace(/&apos;/g, "'");
-  this.write(path.join(this.appPath, 'index.html'), this.indexFile);
+  if(this.jade){
+    this.write(path.join(this.appPath, 'index.html'), this.indexFile);
+  }else{
+    this.write(path.join(this.appPath, 'index.jade'), this.indexFile);
+  }
 };
 
 Generator.prototype.packageFiles = function packageFiles() {

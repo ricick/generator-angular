@@ -30,9 +30,14 @@ Generator.prototype.setupEnv = function setupEnv() {
     this.copy(join('app', dest), join(appPath, dest));
   }.bind(this);
 
-  copy('404.html');
   copy('favicon.ico');
   copy('robots.txt');
-  copy('views/main.html');
+  if (this.env.options.jade) {
+    copy('../../jade/404.jade');
+    copy('../../jade/views/main.jade');
+  }else{
+    copy('../../html/404.html');
+    copy('../../html/views/main.html');
+  }
   this.directory(join('app', 'images'), join(appPath, 'images'));
 };
