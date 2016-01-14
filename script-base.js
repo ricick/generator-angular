@@ -61,6 +61,20 @@ var Generator = module.exports = function Generator() {
 
     this.env.options.coffee = this.options.coffee;
   }
+  
+  this.env.options.jade = this.options.jade;
+  if (typeof this.env.options.jade === 'undefined') {
+    this.option('jade');
+
+    // attempt to detect if user is using CS or not
+    // if cml arg provided, use that; else look for the existence of cs
+    if (!this.options.jade &&
+      this.expandFiles(path.join(this.env.options.appPath, '/**/*.jade'), {}).length > 0) {
+      this.options.jade = true;
+    }
+
+    this.env.options.jade = this.options.jade;
+  }
 
   var sourceRoot = '/templates/javascript';
   this.scriptSuffix = '.js';
@@ -103,15 +117,27 @@ Generator.prototype.htmlTemplate = function (src, dest) {
 
 Generator.prototype.addScriptToIndex = function (script) {
   try {
+    this.jade = this.env.options.jade;
     var appPath = this.env.options.appPath;
-    var fullPath = path.join(appPath, 'index.html');
-    angularUtils.rewriteFile({
-      file: fullPath,
-      needle: '<!-- endbuild -->',
-      splicable: [
-        '<script src="scripts/' + script.toLowerCase().replace(/\\/g, '/') + '.js"></script>'
-      ]
-    });
+    if(this.jade){
+      var fullPath = path.join(appPath, 'index.jade');
+      angularUtils.rewriteFile({
+        file: fullPath,
+        needle: '// endbuild',
+        splicable: [
+          'script(src="scripts/' + script.toLowerCase().replace(/\\/g, '/') + '.js")'
+        ]
+      });
+    }else{
+      var fullPath = path.join(appPath, 'index.html');
+      angularUtils.rewriteFile({
+        file: fullPath,
+        needle: '<!-- endbuild -->',
+        splicable: [
+          '<script src="scripts/' + script.toLowerCase().replace(/\\/g, '/') + '.js"></script>'
+        ]
+      });
+    }
   } catch (e) {
     this.log.error(chalk.yellow(
       '\nUnable to find ' + fullPath + '. Reference to ' + script + '.js ' + 'not added.\n'

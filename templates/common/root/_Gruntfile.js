@@ -76,7 +76,7 @@ module.exports = function (grunt) {
         files: ['Gruntfile.js']
       },<% if (jade) { %>
       jade: {
-        files: ['<%= yeoman.app %>/{,*/}*.jade'],
+        files: ['<%%= yeoman.app %>/{,*/}*.jade'],
         tasks: ['jade']
       },<% } %>
       livereload: {
@@ -226,8 +226,9 @@ module.exports = function (grunt) {
 
     // Automatically inject Bower components into the app
     wiredep: {
-      app: {
-        src: ['<%%= yeoman.app %>/index.html'],
+      app: {<% if (jade) { %>
+        src: ['<%%= yeoman.app %>/index.jade'],<% }else{ %>
+        src: ['<%%= yeoman.app %>/index.html'],<% } %>
         ignorePath:  /\.\.\//
       },
       test: {
@@ -330,13 +331,13 @@ module.exports = function (grunt) {
         },
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
+          cwd: '<%%= yeoman.app %>',
           dest: '.tmp',
           src: '*.jade',
           ext: '.html'
         }]
       }
-    }<% } %><% if (compass) { %>
+    },<% } %><% if (compass) { %>
 
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
@@ -382,8 +383,9 @@ module.exports = function (grunt) {
     // Reads HTML for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
-    useminPrepare: {
-      html: '<%%= yeoman.app %>/index.html',
+    useminPrepare: {<% if (jade) { %>
+      html: '.tmp/index.html',<% } else { %>
+      html: '<%%= yeoman.app %>/index.html',<% } %>
       options: {
         dest: '<%%= yeoman.dist %>',
         flow: {
@@ -472,9 +474,11 @@ module.exports = function (grunt) {
           removeCommentsFromCDATA: true
         },
         files: [{
-          expand: true,
+          expand: true,<% if(jade){ %>
+          cwd: '.tmp',
+          src: '{,*/}*.html',<% } else { %>
           cwd: '<%%= yeoman.dist %>',
-          src: ['*.html'],
+          src: ['*.html'],<% } %>
           dest: '<%%= yeoman.dist %>'
         }]
       }
@@ -599,7 +603,8 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',<% if (typescript) { %>
-      'tsd:refresh',<% } %>
+      'tsd:refresh',<% } %><% if (jade) { %>
+      'jade',<% } %>
       'concurrent:server',
       'postcss:server',
       'connect:livereload',
@@ -626,6 +631,8 @@ module.exports = function (grunt) {
     'clean:dist',
     'wiredep',<% if (typescript) { %>
     'tsd:refresh',<% } %>
+    'wiredep',<% if (jade) { %>
+    'jade',<% } %>
     'useminPrepare',
     'concurrent:dist',
     'postcss',

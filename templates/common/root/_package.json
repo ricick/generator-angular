@@ -57,7 +57,7 @@
     "grunt-wiredep": "^2.0.0",
     "jit-grunt": "^0.9.1",
     "time-grunt": "^1.0.0"<% } %>,<% if (jade) { %>
-    "grunt-contrib-jade": "^0.15.0",<% } %
+    "grunt-contrib-jade": "^0.15.0",<% } %>
     "jshint-stylish": "^1.0.0"
   },
   "engines": {

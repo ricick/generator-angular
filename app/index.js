@@ -365,9 +365,9 @@ Generator.prototype.createIndexHtml = function createIndexHtml() {
   this.jade = this.env.options.jade;
   this.indexFile = this.indexFile.replace(/&apos;/g, "'");
   if(this.jade){
-    this.write(path.join(this.appPath, 'index.html'), this.indexFile);
-  }else{
     this.write(path.join(this.appPath, 'index.jade'), this.indexFile);
+  }else{
+    this.write(path.join(this.appPath, 'index.html'), this.indexFile);
   }
 };
 
