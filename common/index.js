@@ -33,11 +33,13 @@ Generator.prototype.setupEnv = function setupEnv() {
   copy('favicon.ico');
   copy('robots.txt');
   if (this.env.options.jade) {
-    copy('../../jade/404.jade');
-    copy('../../jade/views/main.jade');
+    this.sourceRoot(join(__dirname, '../templates/jade'));
+    this.copy('404.jade');
+    this.copy('views/main.jade');
   }else{
-    copy('../../html/404.html');
-    copy('../../html/views/main.html');
+    this.sourceRoot(join(__dirname, '../templates/html'));
+    this.copy('404.html');
+    this.copy('views/main.html');
   }
   this.directory(join('app', 'images'), join(appPath, 'images'));
 };
