@@ -32,14 +32,18 @@ Generator.prototype.setupEnv = function setupEnv() {
 
   copy('favicon.ico');
   copy('robots.txt');
-  if (this.env.options.jade) {
-    this.sourceRoot(join(__dirname, '../templates/jade'));
-    this.copy('404.jade');
-    this.copy('views/main.jade');
+  console.log("appPath", appPath);
+  console.log("this.destinationRoot();", this.destinationRoot());
+  //this.destinationRoot("app");
+  if (this.env.options.jade) {  
+    //this.sourceRoot(join(__dirname, '../templates/jade'));
+    this.copy('../jade/404.jade', './app/404.jade');
+    this.copy('../jade/views/main.jade', './app/views/main.jade');
   }else{
-    this.sourceRoot(join(__dirname, '../templates/html'));
-    this.copy('404.html');
-    this.copy('views/main.html');
+    //this.sourceRoot(join(__dirname, '../templates/html'));
+    this.copy('../html/404.html', './app/404.html');
+    this.copy('../html/views/main.html', './app/views/main.html');
   }
+  //this.sourceRoot(join(__dirname, '../templates/common'));
   this.directory(join('app', 'images'), join(appPath, 'images'));
 };
